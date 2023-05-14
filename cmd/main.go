@@ -5,13 +5,14 @@ import (
 	"github.com/mukolla/go-todo-app/pkg/handler"
 	"github.com/mukolla/go-todo-app/pkg/repository"
 	"github.com/mukolla/go-todo-app/pkg/service"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"log"
 )
 
 func main() {
+	logrus.SetFormatter(new(logrus.JSONFormatter))
 	if err := initConfig(); err != nil {
-		log.Fatalf("error initialization config: %s", err.Error())
+		logrus.Fatalf("error initialization config: %s", err.Error())
 	}
 
 	db, err := repository.NewPostgresDB(repository.Config{
@@ -24,7 +25,7 @@ func main() {
 	})
 
 	if err != nil {
-		log.Fatalf("failed to initialize DB %s", err.Error())
+		logrus.Fatalf("failed to initialize DB %s", err.Error())
 	}
 
 	repos := repository.NewRepository(db)
@@ -33,7 +34,7 @@ func main() {
 
 	srv := new(todo.Server)
 	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
-		log.Fatalf("error occured while running http server: %s", err.Error())
+		logrus.Fatalf("error occured while running http server: %s", err.Error())
 	}
 }
 

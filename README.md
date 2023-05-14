@@ -6,6 +6,10 @@ go run cmd/main.go
 
 docker run --name=todo-db -e POSTGRES_PASSWORD='qwerty' -p 5436:5432 -d --rm postgres
 
+docker ps
+
+docker exec -it f1582f0afdb1 /bin/bash
+
 **Install migrate**
 
 $ curl -L https://github.com/golang-migrate/migrate/releases/download/v4.14.1/migrate.linux-amd64.tar.gz | tar xvz
@@ -20,3 +24,8 @@ migrate create -ext sql -dir ./schema -seq init
 **Migrate up**
 
 migrate -path ./schema -database 'postgres://postgres:qwerty@localhost:5436/postgres?sslmode=disable' up
+
+
+***Add log library***
+
+go get -u github.com/sirupsen/logrus
