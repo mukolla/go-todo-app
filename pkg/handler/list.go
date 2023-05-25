@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mukolla/go-todo-app"
 	"net/http"
+	"strconv"
 )
 
 func (h *Handler) createList(c *gin.Context) {
@@ -34,6 +35,10 @@ type getAllListsResponse struct {
 	Data []todo.TodoList `json:"data"`
 }
 
+type getListsResponse struct {
+	Data todo.TodoList `json:"data"`
+}
+
 func (h *Handler) getAllList(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -53,6 +58,26 @@ func (h *Handler) getAllList(c *gin.Context) {
 }
 
 func (h *Handler) getListById(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, "user id not found")
+		return
+	}
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid id param")
+	}
+
+	list, err := h.services.TodoList.GetById(userId, id)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, getListsResponse{
+		Data: list,
+	})
 }
 
 func (h *Handler) updateList(c *gin.Context) {
