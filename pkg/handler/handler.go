@@ -2,11 +2,18 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	_ "github.com/mukolla/go-todo-app/docs"
 	"github.com/mukolla/go-todo-app/pkg/service"
+	"github.com/swaggo/files"
+	"github.com/swaggo/gin-swagger"
 )
 
 type Handler struct {
 	services *service.Service
+}
+
+func updateSwaggerURL(config *ginSwagger.Config) {
+	config.URL = "swagger.json"
 }
 
 func NewHandler(services *service.Service) *Handler {
@@ -15,6 +22,8 @@ func NewHandler(services *service.Service) *Handler {
 
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, updateSwaggerURL))
 
 	auth := router.Group("/auth")
 	{

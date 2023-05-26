@@ -6,6 +6,18 @@ import (
 	"net/http"
 )
 
+// singUp creates a new user.
+// @Tags auth
+// @Summary Create a new user
+// @Description Create a new user with the provided details
+// @ID create-account
+// @Accept json
+// @Produce json
+// @Param input body todo.User true "User object"
+// @Success 200 {integer} integer 1
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /auth/signup [post]
 func (h *Handler) singUp(c *gin.Context) {
 	var input todo.User
 

@@ -9,6 +9,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+// @title Todo App Api
+// @version 1.0
+// @host localhost:8000
+// @BasePath /
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 	//logrus.SetLevel(logrus.DebugLevel)
