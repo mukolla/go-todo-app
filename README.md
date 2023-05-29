@@ -29,3 +29,7 @@ migrate -path ./schema -database 'postgres://postgres:qwerty@localhost:5436/post
 ***Add log library***
 
 go get -u github.com/sirupsen/logrus
+
+***Init/update Swagger API doc***
+swag init -g cmd/main.go
+cp docs/swagger.json docs/doc.json

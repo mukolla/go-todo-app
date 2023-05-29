@@ -5,6 +5,27 @@ definitions:
       message:
         type: string
     type: object
+  handler.signInInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  todo.TodoList:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+    required:
+    - title
+    type: object
   todo.User:
     properties:
       name:
@@ -17,17 +38,98 @@ definitions:
 host: localhost:8000
 info:
   contact: {}
-  title: Todo App Api
+  description: API Server for TodoList Application
+  title: Todo App API
   version: "1.0"
 paths:
-  /auth/signup:
+  /api/lists:
     post:
       consumes:
       - application/json
-      description: Create a new user with the provided details
+      description: create todo list
+      operationId: create-list
+      parameters:
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/todo.TodoList'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create todo list
+      tags:
+      - lists
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: login
+      operationId: login
+      parameters:
+      - description: credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.signInInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: SignIn
+      tags:
+      - auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: create account
       operationId: create-account
       parameters:
-      - description: User object
+      - description: account info
         in: body
         name: input
         required: true
@@ -44,11 +146,25 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handler.errorResponse'
-      summary: Create a new user
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: SignUp
       tags:
       - auth
+securityDefinitions:
+  ApiKeyAuth:
+    description: 'Must be start word: Bearer ... JWT authorization token'
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

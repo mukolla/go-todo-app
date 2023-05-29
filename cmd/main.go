@@ -9,10 +9,18 @@ import (
 	"github.com/spf13/viper"
 )
 
-// @title Todo App Api
+// @title Todo App API
 // @version 1.0
+// @description API Server for TodoList Application
+
 // @host localhost:8000
 // @BasePath /
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
+// @description Must be start word: Bearer ... JWT authorization token
+
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 	//logrus.SetLevel(logrus.DebugLevel)
